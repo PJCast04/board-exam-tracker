@@ -1,0 +1,24 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Claude Code / AI tooling artifacts
+.claude/
+PRODUCT.md
+DESIGN.md
+CLAUDE.md
+
+# Local backups
+*.zip
+
+# Environment and logs
+.env
+.env.*
+*.log
+npm-debug.log*
+
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
