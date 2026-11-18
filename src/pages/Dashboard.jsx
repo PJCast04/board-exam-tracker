@@ -10,12 +10,14 @@ import CalendarView from '../components/dashboard/views/CalendarView'
 import GoalsView from '../components/dashboard/views/GoalsView'
 import NotesView from '../components/dashboard/views/NotesView'
 import SettingsView from '../components/dashboard/views/SettingsView'
+import QuizView from '../components/dashboard/views/QuizView'
 
 const VIEWS = {
   overview: Overview,
   subjects: SubjectsView,
   schedule: ScheduleView,
   scores:   ExamScoresView,
+  quizzes:  QuizView,
   timer:    TimerView,
   calendar: CalendarView,
   goals:    GoalsView,

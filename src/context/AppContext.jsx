@@ -10,6 +10,7 @@ const KEY = {
   settings:   'bept_settings',
   activities: 'bept_activities',
   examScores: 'bept_examScores',
+  quizzes:    'bept_quizzes',
 }
 
 // Earthy presets that sit inside the forest/cream palette
@@ -84,6 +85,7 @@ export function AppProvider({ children }) {
   }))
   const [activities, setActivities] = useState(() => load(KEY.activities, []))
   const [examScores, setExamScores] = useState(() => load(KEY.examScores, []))
+  const [quizzes,    setQuizzes]    = useState(() => load(KEY.quizzes,    []))
 
   useEffect(() => { save(KEY.subjects,   subjects)   }, [subjects])
   useEffect(() => { save(KEY.examDate,   examDate)   }, [examDate])
@@ -93,6 +95,7 @@ export function AppProvider({ children }) {
   useEffect(() => { save(KEY.settings,   settings)   }, [settings])
   useEffect(() => { save(KEY.activities, activities) }, [activities])
   useEffect(() => { save(KEY.examScores, examScores) }, [examScores])
+  useEffect(() => { save(KEY.quizzes,    quizzes)    }, [quizzes])
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', settings.darkMode)
@@ -197,6 +200,31 @@ export function AppProvider({ children }) {
       : e))
   }, [])
 
+  // Generated quizzes. Each one gets a matching exam in Exam scores on its first attempt,
+  // so retakes show up there with the same trend line as mock exams.
+  const addQuiz = useCallback(quiz => {
+    const id = genId()
+    setQuizzes(prev => [{ id, createdAt: isoDate(), attempts: [], examId: null, ...quiz }, ...prev])
+    return id
+  }, [])
+  const deleteQuiz = useCallback(id => {
+    setQuizzes(prev => prev.filter(q => q.id !== id))
+  }, [])
+  const recordQuizAttempt = useCallback((quizId, correct) => {
+    const quiz = quizzes.find(q => q.id === quizId)
+    if (!quiz) return
+    const take = { id: genId(), score: correct, takenAt: isoDate() }
+    const linked = quiz.examId && examScores.some(e => e.id === quiz.examId)
+    const examId = linked ? quiz.examId : genId()
+
+    setExamScores(prev => linked
+      ? prev.map(e => e.id === examId ? { ...e, takes: [...e.takes, take] } : e)
+      : [...prev, { id: examId, subjectId: quiz.subjectId ?? null, name: quiz.title, totalItems: quiz.questions.length, takes: [take] }])
+    setQuizzes(prev => prev.map(q => q.id === quizId
+      ? { ...q, examId, attempts: [...q.attempts, { score: correct, takenAt: take.takenAt }] }
+      : q))
+  }, [quizzes, examScores])
+
   // Derived
   const derived = useMemo(() => {
     const day = isoDate()
@@ -221,14 +249,14 @@ export function AppProvider({ children }) {
   }, [logs, subjects, examDate])
 
   const exportData = useCallback(() => {
-    const data = { subjects, examDate, startDate, logs, goals, settings, activities, examScores, exportedAt: new Date().toISOString() }
+    const data = { subjects, examDate, startDate, logs, goals, settings, activities, examScores, quizzes, exportedAt: new Date().toISOString() }
     const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }))
     const a = document.createElement('a')
     a.href = url
     a.download = `board-exam-tracker-${isoDate()}.json`
     a.click()
     URL.revokeObjectURL(url)
-  }, [subjects, examDate, startDate, logs, goals, settings, activities, examScores])
+  }, [subjects, examDate, startDate, logs, goals, settings, activities, examScores, quizzes])
 
   // Resolves true on success, false if the file isn't a valid backup
   const importData = useCallback(file => new Promise(resolve => {
@@ -245,6 +273,7 @@ export function AppProvider({ children }) {
         if (data.settings)   setSettingsRaw(prev => ({ ...prev, ...data.settings }))
         if (data.activities) setActivities(data.activities)
         if (data.examScores) setExamScores(data.examScores)
+        if (data.quizzes)    setQuizzes(data.quizzes)
         resolve(true)
       } catch { resolve(false) }
     }
@@ -254,7 +283,7 @@ export function AppProvider({ children }) {
 
   return (
     <AppContext.Provider value={{
-      subjects, examDate, startDate, logs, goals, settings, activities, examScores,
+      subjects, examDate, startDate, logs, goals, settings, activities, examScores, quizzes,
       setExamDate, setStartDate, setSettings,
       addSubject, updateSubject, deleteSubject,
       addTopic, toggleTopic, deleteTopic,
@@ -262,6 +291,7 @@ export function AppProvider({ children }) {
       addGoal, toggleGoal, deleteGoal, clearDoneGoals,
       addActivity, deleteActivity,
       addExamScore, updateExamScore, deleteExamScore, addTake, deleteTake,
+      addQuiz, deleteQuiz, recordQuizAttempt,
       ...derived,
       SUBJECT_COLORS,
       exportData, importData,

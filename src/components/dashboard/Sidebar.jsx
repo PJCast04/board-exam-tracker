@@ -9,6 +9,7 @@ const NAV = [
   ['schedule', 'Schedule'],
   ['timer',    'Timer'],
   ['scores',   'Exam scores'],
+  ['quizzes',  'Quizzes'],
   ['calendar', 'Activity'],
   ['goals',    'Goals'],
   ['notes',    'Notes'],

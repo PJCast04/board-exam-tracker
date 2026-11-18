@@ -15,6 +15,7 @@ const FEATURES = [
   ['Schedule', 'Plan sessions by month, week, or day, down to the subject and topic.'],
   ['Timer', 'Focus sessions log themselves to the subject you are working on, and keep running while you use the rest of the app.'],
   ['Mock exams', 'Log every attempt at a mock or pre-board. Retakes sit under the same exam so the trend is obvious.'],
+  ['Quizzes', 'Upload a reviewer as PDF, Word, or PowerPoint and get multiple-choice questions written from it, with explanations for every answer.'],
   ['Activity', 'A year of study days at a glance, and where your hours went by subject.'],
 ]
 
@@ -59,7 +60,7 @@ export default function Landing({ onStart }) {
 
       <section className="lp-section" id="features">
         <div className="lp-wrap lp-split">
-          <h2 className="lp-h2">Five tools for one job.</h2>
+          <h2 className="lp-h2">Six tools for one job.</h2>
           <dl className="lp-defs">
             {FEATURES.map(([term, desc]) => (
               <div key={term}><dt>{term}</dt><dd>{desc}</dd></div>
@@ -82,7 +83,7 @@ export default function Landing({ onStart }) {
       <section className="lp-wrap"><div className="lp-close">
         <div>
           <h2 className="lp-h2">Your data stays in your browser.</h2>
-          <p>No account and no server. Export a backup file whenever you want one.</p>
+          <p>No account and no server. The only thing that leaves your device is a reviewer you choose to turn into a quiz, sent to the AI provider you pick.</p>
         </div>
         <button className="btn btn-primary btn-lg" onClick={onStart}>Open the tracker</button>
         </div>
