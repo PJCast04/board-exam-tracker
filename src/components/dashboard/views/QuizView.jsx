@@ -174,7 +174,7 @@ function TakeQuiz({ quiz, onExit }) {
   }
 
   return (
-    <div ref={top} style={{ maxWidth: 760, scrollMarginTop: 80 }}>
+    <div ref={top} className="page-narrow" style={{ scrollMarginTop: 80 }}>
       <button className="btn btn-sm btn-quiet" style={{ marginLeft: -10, marginBottom: 12 }} onClick={onExit}>Back to quizzes</button>
       <div className="page-head" style={{ marginBottom: 24 }}>
         <div>

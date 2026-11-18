@@ -50,7 +50,7 @@ export default function SettingsView() {
   }
 
   return (
-    <div style={{ maxWidth: 760 }}>
+    <div className="page-narrow">
       <div className="page-head" style={{ marginBottom: 8 }}>
         <h1 className="page-title">Settings</h1>
       </div>

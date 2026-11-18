@@ -178,7 +178,9 @@ img, svg { display: block; }
 .side-foot { margin-top: auto; display: grid; gap: 1px; }
 
 .main { margin-left: var(--side-w); padding: 40px 48px 80px; }
-.page { max-width: 1040px; }
+.page { max-width: 1120px; margin-inline: auto; }
+/* Forms and reading views use a narrower column, centered so wide screens stay balanced */
+.page-narrow { max-width: 760px; margin-inline: auto; }
 
 .topbar { display: none; }
 .scrim { display: none; }
